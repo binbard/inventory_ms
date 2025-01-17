@@ -4,6 +4,9 @@ from .forms import ProductForm, StockMovementForm, SupplierForm, SaleOrderForm
 from django.contrib import messages
 from django.db.models import Sum
 
+def home(request):
+    return redirect("list_products")
+
 def add_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
