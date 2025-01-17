@@ -1,0 +1,45 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}Stock Movements{% endblock %}
+
+{% block content %}
+<h1>Stock Movements</h1>
+
+<h2>Check Stock Level</h2>
+<form method="get" action="{% url 'stock_movements' %}">
+    <label for="product">Select Product:</label>
+    <select name="product" id="product">
+        {% for product in products %}
+            <option value="{{ product.id }}">{{ product.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Check Stock Level</button>
+</form>
+
+{% if stock_level is not none %}
+    <h3>Stock Level for {{ selected_product.name }}: {{ stock_level }}</h3>
+{% endif %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Movement Type</th>
+            <th>Movement Date</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for movement in stock_movements %}
+            <tr>
+                <td>{{ movement.product.name }}</td>
+                <td>{{ movement.quantity }}</td>
+                <td>{{ movement.get_movement_type_display }}</td>
+                <td>{{ movement.movement_date }}</td>
+                <td>{{ movement.notes }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

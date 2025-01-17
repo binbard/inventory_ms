@@ -1,0 +1,48 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}Sale Orders List{% endblock %}
+
+{% block content %}
+<h1>Sale Orders</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Sale Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in sale_orders %}
+        <tr>
+            <td>{{ order.product.name }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.total_price }}</td>
+            <td>{{ order.sale_date }}</td>
+            <td class="flex-td">{{ order.status }}
+                {% if order.status == 'Pending' %}
+                    <form method="post" action="{% url 'update_sale_order_status' order.id %}" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit" name="status" value="Completed">✔️</button>
+                        <button type="submit" name="status" value="Cancelled">❌</button>
+                    </form>
+                {% elif order.status == 'Completed' %}
+                    <form method="post" action="{% url 'update_sale_order_status' order.id %}" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit" name="status" value="Cancelled">❌</button>
+                    </form>
+                {% elif order.status == 'Cancelled' %}
+                    <form method="post" action="{% url 'update_sale_order_status' order.id %}" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit" name="status" value="Completed">🔄</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'create_sale_order' %}">Add New Sale Order</a>
+{% endblock %}
